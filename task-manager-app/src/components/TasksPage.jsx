@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
+import Can from './Can';
 
-const TasksPage = ({ tasks, setTasks }) => {
+const TasksPage = ({ currentUser, tasks, setTasks }) => {
   const [filter, setFilter] = useState('all');
   
   const filteredTasks = filter === 'all' 
@@ -19,10 +20,12 @@ const TasksPage = ({ tasks, setTasks }) => {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-gray-900">Tasks</h2>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center space-x-2">
-            <Plus className="w-4 h-4" />
-            <span>Add Task</span>
-          </button>
+          <Can currentUser={currentUser} hasPermissions={['tasks:create']}>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center space-x-2 transition-colors">
+              <Plus className="w-4 h-4" />
+              <span>Add Task</span>
+            </button>
+          </Can>
         </div>
         
         <div className="flex space-x-4">
@@ -95,12 +98,16 @@ const TasksPage = ({ tasks, setTasks }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-2">
-                    <button className="text-indigo-600 hover:text-indigo-900">
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <Can currentUser={currentUser} hasPermissions={['tasks:update']}>
+                      <button className="text-indigo-600 hover:text-indigo-900 transition-colors" title="Edit task">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                    </Can>
+                    <Can currentUser={currentUser} hasPermissions={['tasks:delete']}>
+                      <button className="text-red-600 hover:text-red-900 transition-colors" title="Delete task">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </Can>
                   </div>
                 </td>
               </tr>

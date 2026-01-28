@@ -71,6 +71,7 @@ const App = () => {
           hasPermissions={['tasks:read']}
         >
           <TasksPage 
+            currentUser={currentUser}
             tasks={tasks} 
             setTasks={setTasks} 
           />

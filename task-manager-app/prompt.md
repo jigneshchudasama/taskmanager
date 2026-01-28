@@ -143,3 +143,17 @@ Add proper permission/authorization checks in both the Navigation and App compon
 Update ProtectedRoute to use the local user state (in-memory state / context) instead of reading from localStorage.
 Ensure the permission logic is applied consistently across the app.
 Carefully review and verify all recent changes to confirm nothing is broken and behavior remains correct.
+
+Prompt 6
+
+tasks
+
+- add button should be visible only if user has create permissions
+- edit if update permission
+- delete if delete permission
+
+settings
+
+- all the input fields, toggle & dropdown should be editable only if user have update permissions else it should be disabled
+
+Pls use Can componet to handle this

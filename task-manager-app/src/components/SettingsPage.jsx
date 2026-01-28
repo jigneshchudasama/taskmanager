@@ -1,4 +1,6 @@
 import React from 'react';
+import Can from './Can';
+import { checkPermissions } from '../utils/permissions';
 
 const SettingsPage = ({ currentUser, userSettings, setUserSettings }) => {
     const handleSettingChange = (setting, value) => {
@@ -56,59 +58,71 @@ const SettingsPage = ({ currentUser, userSettings, setUserSettings }) => {
               <h3 className="text-lg font-medium text-gray-900">Preferences</h3>
             </div>
             <div className="px-6 py-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Theme</label>
-                  <p className="text-sm text-gray-500">Choose your preferred theme</p>
+              <Can currentUser={currentUser} hasPermissions={['settings:update']}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Theme</label>
+                    <p className="text-sm text-gray-500">Choose your preferred theme</p>
+                  </div>
+                  <select
+                    value={userSettings.theme}
+                    onChange={(e) => handleSettingChange('theme', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="system">System</option>
+                  </select>
                 </div>
-                <select
-                  value={userSettings.theme}
-                  onChange={(e) => handleSettingChange('theme', e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                  <option value="system">System</option>
-                </select>
-              </div>
+              </Can>
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Push Notifications</label>
-                  <p className="text-sm text-gray-500">Receive notifications for task updates</p>
-                </div>
-                <button
-                  onClick={() => handleSettingChange('notifications', !userSettings.notifications)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    userSettings.notifications ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      userSettings.notifications ? 'translate-x-6' : 'translate-x-1'
+              <Can currentUser={currentUser} hasPermissions={['settings:update']}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Push Notifications</label>
+                    <p className="text-sm text-gray-500">Receive notifications for task updates</p>
+                  </div>
+                  <button
+                    onClick={() => handleSettingChange('notifications', !userSettings.notifications)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      userSettings.notifications ? 'bg-blue-600' : 'bg-gray-200'
                     }`}
-                  />
-                </button>
-              </div>
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        userSettings.notifications ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </Can>
               
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="text-sm font-medium text-gray-700">Email Updates</label>
-                  <p className="text-sm text-gray-500">Receive daily email summaries</p>
-                </div>
-                <button
-                  onClick={() => handleSettingChange('emailUpdates', !userSettings.emailUpdates)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    userSettings.emailUpdates ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      userSettings.emailUpdates ? 'translate-x-6' : 'translate-x-1'
+              <Can currentUser={currentUser} hasPermissions={['settings:update']}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Email Updates</label>
+                    <p className="text-sm text-gray-500">Receive daily email summaries</p>
+                  </div>
+                  <button
+                    onClick={() => handleSettingChange('emailUpdates', !userSettings.emailUpdates)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      userSettings.emailUpdates ? 'bg-blue-600' : 'bg-gray-200'
                     }`}
-                  />
-                </button>
-              </div>
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        userSettings.emailUpdates ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              </Can>
+
+              {!checkPermissions(currentUser.permissions, ['settings:update']) ? (
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-sm text-yellow-800">You don't have permission to modify these settings.</p>
+                </div>
+              ) : null}
             </div>
           </div>
           
