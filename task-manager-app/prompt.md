@@ -157,3 +157,11 @@ settings
 - all the input fields, toggle & dropdown should be editable only if user have update permissions else it should be disabled
 
 Pls use Can componet to handle this
+
+Prompt 7
+
+pls create user management page ui similar to tasks page
+
+Prompt 8
+
+filter is not required. let's just show all the users & no need to take input of role and show role field

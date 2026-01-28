@@ -94,7 +94,7 @@ const App = () => {
           currentUser={currentUser}
           hasPermissions={['user-management:read']}
         >
-          <UserManagement />
+          <UserManagement currentUser={currentUser} />
         </ProtectedRoute>
       )}
     </div>
