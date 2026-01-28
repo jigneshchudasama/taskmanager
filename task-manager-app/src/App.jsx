@@ -4,6 +4,8 @@ import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import TasksPage from './components/TasksPage';
 import SettingsPage from './components/SettingsPage';
+import UserManagement from './components/UserManagement';
+import ProtectedRoute from './components/ProtectedRoute';
 import { mockTasks } from './data/mockData';
 
 const App = () => {
@@ -51,6 +53,11 @@ const App = () => {
           userSettings={userSettings}
           setUserSettings={setUserSettings}
         />
+      )}
+      {currentPage === 'user-management' && (
+        <ProtectedRoute hasPermissions={["settings:read"]}>
+          <UserManagement />
+        </ProtectedRoute>
       )}
     </div>
   );

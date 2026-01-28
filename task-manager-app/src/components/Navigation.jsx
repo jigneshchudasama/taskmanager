@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, Home, Settings, List, LogOut } from 'lucide-react';
+import { checkPermissions } from '../utils/permissions';
 
 const Navigation = ({ currentUser, currentPage, setCurrentPage, setCurrentUser }) => {
   const navItems = [
@@ -7,6 +8,10 @@ const Navigation = ({ currentUser, currentPage, setCurrentPage, setCurrentUser }
     { id: 'tasks', label: 'Tasks', icon: List },
     { id: 'settings', label: 'Settings', icon: Settings }
   ];
+
+  if (checkPermissions(currentUser?.permissions, ['settings:read'])) {
+    navItems.push({ id: 'user-management', label: 'User Management', icon: User });
+  }
 
   return (
     <nav className="bg-white shadow-sm border-b">
