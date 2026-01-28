@@ -1,10 +1,9 @@
 import React from "react";
 import { checkPermissions } from "../utils/permissions";
 
-const Can = ({ hasPermissions, children }) => {
-  const user = JSON.parse(localStorage.getItem("authenticatedUser"));
-
-  if (!user || !checkPermissions(user.permissions, hasPermissions)) {
+const Can = ({ currentUser, hasPermissions, children }) => {
+  // Validate that currentUser is provided
+  if (!currentUser || !checkPermissions(currentUser.permissions, hasPermissions)) {
     return null;
   }
 

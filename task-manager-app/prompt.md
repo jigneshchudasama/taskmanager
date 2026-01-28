@@ -124,3 +124,22 @@ Acceptance testcases
 
 - create one user named Jignesh, with permissions settings: read, create, tasks: read, create
 - create one more user named Piyush, with permissions settings: read, tasks: read
+
+Prompt 2
+
+there is duplicate variable names, please make sure that variable name which you are using it should not create conflict with existing ones
+
+Prompt 3
+
+add new navItem in navigation for user management and it should visible only if user have 'user-management' related permissions
+
+Prompt 4
+
+i don't want to navigate user to login page since we don't have any routing if user dont have permissions in ProtectedRoute instead just show you dont have enough permission to view this page section
+
+Prompt 5
+
+Add proper permission/authorization checks in both the Navigation and App components.
+Update ProtectedRoute to use the local user state (in-memory state / context) instead of reading from localStorage.
+Ensure the permission logic is applied consistently across the app.
+Carefully review and verify all recent changes to confirm nothing is broken and behavior remains correct.

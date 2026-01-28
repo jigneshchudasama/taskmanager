@@ -7,6 +7,7 @@ import SettingsPage from './components/SettingsPage';
 import UserManagement from './components/UserManagement';
 import ProtectedRoute from './components/ProtectedRoute';
 import { mockTasks } from './data/mockData';
+import { checkPermissions } from './utils/permissions';
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -27,35 +28,71 @@ const App = () => {
     );
   }
 
+  // Define page permissions map
+  const pagePermissionsMap = {
+    'dashboard': ['dashboard:read'],
+    'tasks': ['tasks:read'],
+    'settings': ['settings:read'],
+    'user-management': ['user-management:read'],
+  };
+
+  // Helper function to check if user has permission for a page
+  const hasPagePermission = (pageId) => {
+    const requiredPermissions = pagePermissionsMap[pageId];
+    if (!requiredPermissions) return true;
+    return checkPermissions(currentUser.permissions, requiredPermissions);
+  };
+
+  // Helper function to safely navigate to a page
+  const canNavigateTo = (pageId) => {
+    return hasPagePermission(pageId);
+  };
+
+  // Redirect to dashboard if user tries to access a page without permission
+  const pageToRender = hasPagePermission(currentPage) ? currentPage : 'dashboard';
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation 
         currentUser={currentUser}
-        currentPage={currentPage}
+        currentPage={pageToRender}
         setCurrentPage={setCurrentPage}
         setCurrentUser={setCurrentUser}
       />
-      {currentPage === 'dashboard' && (
+      {pageToRender === 'dashboard' && hasPagePermission('dashboard') && (
         <Dashboard 
           currentUser={currentUser} 
           tasks={tasks} 
         />
       )}
-      {currentPage === 'tasks' && (
-        <TasksPage 
-          tasks={tasks} 
-          setTasks={setTasks} 
-        />
-      )}
-      {currentPage === 'settings' && (
-        <SettingsPage 
+      {pageToRender === 'tasks' && hasPagePermission('tasks') && (
+        <ProtectedRoute 
           currentUser={currentUser}
-          userSettings={userSettings}
-          setUserSettings={setUserSettings}
-        />
+          hasPermissions={['tasks:read']}
+        >
+          <TasksPage 
+            tasks={tasks} 
+            setTasks={setTasks} 
+          />
+        </ProtectedRoute>
       )}
-      {currentPage === 'user-management' && (
-        <ProtectedRoute hasPermissions={["settings:read"]}>
+      {pageToRender === 'settings' && hasPagePermission('settings') && (
+        <ProtectedRoute 
+          currentUser={currentUser}
+          hasPermissions={['settings:read']}
+        >
+          <SettingsPage 
+            currentUser={currentUser}
+            userSettings={userSettings}
+            setUserSettings={setUserSettings}
+          />
+        </ProtectedRoute>
+      )}
+      {pageToRender === 'user-management' && hasPagePermission('user-management') && (
+        <ProtectedRoute 
+          currentUser={currentUser}
+          hasPermissions={['user-management:read']}
+        >
           <UserManagement />
         </ProtectedRoute>
       )}

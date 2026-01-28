@@ -3,15 +3,25 @@ import { User, Home, Settings, List, LogOut } from 'lucide-react';
 import { checkPermissions } from '../utils/permissions';
 
 const Navigation = ({ currentUser, currentPage, setCurrentPage, setCurrentUser }) => {
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'tasks', label: 'Tasks', icon: List },
-    { id: 'settings', label: 'Settings', icon: Settings }
+  // Define all available nav items with their required permissions
+  const availableNavItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: Home, permissions: ['dashboard:read'] },
+    { id: 'tasks', label: 'Tasks', icon: List, permissions: ['tasks:read'] },
+    { id: 'settings', label: 'Settings', icon: Settings, permissions: ['settings:read'] },
+    { id: 'user-management', label: 'User Management', icon: User, permissions: ['user-management:read'] }
   ];
 
-  if (checkPermissions(currentUser?.permissions, ['settings:read'])) {
-    navItems.push({ id: 'user-management', label: 'User Management', icon: User });
-  }
+  // Filter nav items based on user permissions
+  const navItems = availableNavItems.filter(item =>
+    checkPermissions(currentUser?.permissions, item.permissions)
+  );
+
+  const handleNavClick = (pageId) => {
+    // Additional safety check before navigation
+    if (checkPermissions(currentUser?.permissions, availableNavItems.find(item => item.id === pageId)?.permissions || [])) {
+      setCurrentPage(pageId);
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b">
@@ -27,12 +37,13 @@ const Navigation = ({ currentUser, currentPage, setCurrentPage, setCurrentUser }
               return (
                 <button
                   key={item.id}
-                  onClick={() => setCurrentPage(item.id)}
+                  onClick={() => handleNavClick(item.id)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     currentPage === item.id
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                   }`}
+                  title={`Access ${item.label}`}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{item.label}</span>
@@ -52,6 +63,7 @@ const Navigation = ({ currentUser, currentPage, setCurrentPage, setCurrentUser }
                 setCurrentPage('login');
               }}
               className="flex items-center space-x-2 text-gray-500 hover:text-gray-700"
+              title="Logout"
             >
               <LogOut className="w-4 h-4" />
               <span className="text-sm">Logout</span>

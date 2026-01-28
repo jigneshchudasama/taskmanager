@@ -4,32 +4,19 @@ export const mockUsers = [
     email: 'admin@example.com',
     password: 'admin123',
     name: 'John Doe',
-    role: 'Admin',
     permissions: {
-      settings: ["read", "create", "delete"],
-      tasks: ["read", "create", "delete"],
+      dashboard: ["read", "create", "update", "delete"],
+      tasks: ["read", "create", "update", "delete"],
+      settings: ["read", "create", "update", "delete"],
+      "user-management": ["read", "create", "update", "delete"],
     },
   },
   {
     email: 'user@example.com',
     password: 'user123',
     name: 'Jane Smith',
-    role: 'User',
     permissions: {
-      settings: ["read"],
-      tasks: ["read"],
-    },
-  },
-  {
-    name: "Jignesh",
-    permissions: {
-      settings: ["read", "create"],
-      tasks: ["read", "create"],
-    },
-  },
-  {
-    name: "Piyush",
-    permissions: {
+      dashboard: ["read"],
       settings: ["read"],
       tasks: ["read"],
     },
